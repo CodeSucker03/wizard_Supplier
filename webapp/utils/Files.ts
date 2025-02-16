@@ -42,9 +42,9 @@ class Files {
       const reader = new FileReader();
 
       reader.onload = () => {
-        const content = <string>(
-          reader.result?.toString().replace(/^data:.+;base64,/, "")
-        );
+        // console.log(reader.result?.toString());
+        const content = <string>reader.result?.toString().replace(/^data:.+;base64,/, "");
+
         resolve(content);
       };
 

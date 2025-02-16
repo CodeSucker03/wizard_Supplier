@@ -130,14 +130,14 @@ export default class Base extends Controller {
   }
 
   protected getControlsByFieldGroup<T extends Control>(props: {
-    control?: Control;
+    container?: Control;
     groupId: string | string[];
     visibility?: "all" | "visible";
     types?: string[];
   }) {
-    const { control, groupId, visibility = "visible", types } = props;
+    const { container, groupId, visibility = "visible", types } = props;
 
-    return control?.getControlsByFieldGroupId(groupId).filter((control) => {
+    return container?.getControlsByFieldGroupId(groupId).filter((control) => {
       const hasGroup = control.checkFieldGroupIds(groupId);
 
       const isInput = control.isA<InputBase>(types || this.controlTypes);
