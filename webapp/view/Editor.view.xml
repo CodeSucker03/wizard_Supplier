@@ -33,14 +33,11 @@
 
                         </FlexBox>
                     </f:FormElement>
+
                 </f:FormContainer>
             </f:Form>
 
-            <Button
-                text="Save"
-                press="onEditRow"
-                type="Emphasized"
-            />
+
             <core:HTML id="htmlString" content="{certificateModel>/htmlString}">
 
             </core:HTML>
@@ -49,8 +46,9 @@
         <footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                <Button text="Interpolate" press="handleInterpolate" />
-                <Button text="PDF Preview" press="handlePDFPreview" />
+                <Button text="Save" press="onEditRow" type="Emphasized" />
+                <Button text="Interpolate" press="handleInterpolate" type="Emphasized" />
+                <Button text="PDF Preview" press="handlePDFPreview" type="Emphasized" />
             </OverflowToolbar>
         </footer>
     </Page>
