@@ -5,14 +5,19 @@
     "comma-dangle": "off",
     "no-console": "warn",
     "curly": "off",
-    "max-len": "off",
-    "no-unused-vars": "warn",
     "no-shadow": "off",
     "max-statements": "off",
     "complexity": "off",
-    "@typescript-eslint/no-explicit-any": "warn",
+    "no-nested-ternary": "off",
+    "valid-jsdoc": "off",
+    "max-len": "warn",
+    "max-depth": "warn",
+    "no-unused-vars": "warn",
+    "linebreak-style": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/ban-ts-comment": "warn",
-    "@typescript-eslint/no-floating-promises": "warn"
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-unsafe-argument": "warn"
   }
 }

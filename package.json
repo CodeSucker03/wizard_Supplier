@@ -18,7 +18,8 @@
     "pdfkit": "^0.16.0",
     "satori": "^0.12.1",
     "svg-to-pdfkit": "^0.1.8",
-    "ui5-tooling-modules": "^3.22.0"
+    "ui5-tooling-modules": "^3.22.0",
+    "validator": "^13.15.23"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.14.7",
@@ -39,7 +40,9 @@
     "eslint-plugin-fiori-custom": "2.6.7",
     "save-dev": "^0.0.1-security",
     "typescript": "^5.1.6",
-    "ui5-tooling-transpile": "^3.3.7"
+    "ui5-tooling-transpile": "^3.3.7",
+    "@types/validator": "^13.15.10",
+    "@sap-ux/ui5-middleware-fe-mockserver": "2"
   },
   "scripts": {
     "start": "fiori run --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#fioricert-display\"",
@@ -50,12 +53,13 @@
     "ts-typecheck": "tsc --noEmit",
     "prestart": "npm run ts-typecheck",
     "prebuild": "npm run ts-typecheck",
-    "deploy": "fiori verify",
+    "deploy": "npm run build && fiori deploy --config ui5-deploy.yaml && rimrat archive.rip",
     "deploy-config": "fiori add deploy-config",
     "start-noflp": "fiori run --open \"index.html?sap-ui-xx-viewCache=false\"",
     "start-variants-management": "fiori run --open \"preview.html?sap-ui-xx-viewCache=false&fiori-tools-rta-mode=true&sap-ui-rta-skip-flex-validation=true#preview-app\"",
     "unit-tests": "fiori run --open 'test/unit/unitTests.qunit.html'",
-    "int-tests": "fiori run --open 'test/integration/opaTests.qunit.html'"
+    "int-tests": "fiori run --open 'test/integration/opaTests.qunit.html'",
+    "start-mock": "fiori run --config ./ui5-mock.yaml --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#fioricert-display\""
   },
   "sapuxLayer": "CUSTOMER_BASE"
 }

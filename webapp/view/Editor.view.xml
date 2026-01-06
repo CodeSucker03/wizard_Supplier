@@ -10,7 +10,10 @@
     xmlns:unified="sap.ui.unified"
     xmlns:f="sap.ui.layout.form"
 >
-    <Page id="pageId" title="{i18n>title}">
+    <Page
+        id="pageId"
+        title="{i18n>title}"
+    >
         <content>
             <unified:FileUploader
                 id="fileUploader"
@@ -25,30 +28,40 @@
                 </f:layout>
                 <f:FormContainer title="Certificate Information">
                     <f:FormElement label="Mã chứng chỉ">
-                        <FlexBox direction="Column"
+                        <FlexBox
+                            direction="Column"
                             items="{
                 path:'certificateModel>/content',
                 factory:'.inputFactory'
-              }">
-
-                        </FlexBox>
+              }"
+                        />
                     </f:FormElement>
-
                 </f:FormContainer>
             </f:Form>
 
-
-            <core:HTML id="htmlString" content="{certificateModel>/htmlString}">
-
-            </core:HTML>
-
+            <core:HTML
+                id="htmlString"
+                content="{certificateModel>/htmlString}"
+            />
         </content>
         <footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                <Button text="Save" press="onEditRow" type="Emphasized" />
-                <Button text="Interpolate" press="handleInterpolate" type="Emphasized" />
-                <Button text="PDF Preview" press="handlePDFPreview" type="Emphasized" />
+                <Button
+                    text="Save"
+                    press="onEditRow"
+                    type="Emphasized"
+                />
+                <Button
+                    text="Interpolate"
+                    press="handleInterpolate"
+                    type="Emphasized"
+                />
+                <Button
+                    text="PDF Preview"
+                    press="handlePDFPreview"
+                    type="Emphasized"
+                />
             </OverflowToolbar>
         </footer>
     </Page>

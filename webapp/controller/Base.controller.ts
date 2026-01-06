@@ -1,8 +1,6 @@
 import type ResourceBundle from "sap/base/i18n/ResourceBundle";
-import type ComboBox from "sap/m/ComboBox";
-import type Input from "sap/m/Input";
-import type InputBase from "sap/m/InputBase";
-import { URLHelper } from "sap/m/library";
+import ComboBox from "sap/m/ComboBox";
+import Input from "sap/m/Input";
 import type MultiComboBox from "sap/m/MultiComboBox";
 import type MultiInput from "sap/m/MultiInput";
 import BusyIndicator from "sap/ui/core/BusyIndicator";
@@ -16,34 +14,48 @@ import UIComponent from "sap/ui/core/UIComponent";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Model from "sap/ui/model/Model";
 import type ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import type PropertyBinding from "sap/ui/model/PropertyBinding";
+import PropertyBinding from "sap/ui/model/PropertyBinding";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import type SimpleType from "sap/ui/model/SimpleType";
 import type Component from "../Component";
-import type { BindingTarget } from "../types/control";
+import type { BindingContextInfoTarget, BindingTarget, CompositeBindingInfo } from "../types/control";
 import type { Dict } from "../types/utils";
-import { Salary } from "../utils/dataTypes/Number";
-import { FieldId, Phone } from "../utils/dataTypes/String";
 import Formatter from "../utils/Formatter";
+import { ValueState } from "sap/ui/core/library";
+import type Button from "sap/m/Button";
+import DatePicker from "sap/m/DatePicker";
+import { formatSAPDate } from "fioricert/utils/shared";
+import TextArea from "sap/m/TextArea";
+import type TimePicker from "sap/m/TimePicker";
+import Select from "sap/m/Select";
+import type InputBase from "sap/m/InputBase";
+import { FieldEmail, FieldPhone } from "fioricert/utils/DataTypes";
+
+export const formControlTypes = [
+  "sap.m.Input",
+  "sap.m.TextArea",
+  "sap.m.DatePicker",
+  "sap.m.Select",
+  "sap.m.RadioButtonGroup",
+  "sap.m.CheckBox",
+  "sap.m.ComboBox",
+] as const;
+
+export type FormControlType = (typeof formControlTypes)[number];
+
+export const VALID_FORM_TYPES = [Input, TextArea, DatePicker, ComboBox, Select];
 
 /**
  * @namespace fioricert.controller
  */
+
 export default class Base extends Controller {
   public formatter = Formatter;
+
   public dataType = {
-    Salary,
-    FieldId,
-    Phone,
+    FieldEmail,
+    FieldPhone,
   };
-  public controlTypes: string[] = [
-    "sap.m.Input",
-    "sap.m.ComboBox",
-    "sap.m.Select",
-    "sap.m.MultiComboBox",
-    "sap.m.MultiInput",
-    "sap.m.DatePicker",
-  ];
 
   protected getRouter() {
     return UIComponent.getRouterFor(this);
@@ -75,12 +87,38 @@ export default class Base extends Controller {
     window.location.reload();
   }
 
-  protected navigate(url: string, newWindow?: boolean) {
-    URLHelper.redirect(url, newWindow);
+  public getResourceBundle() {
+    const model = <ResourceModel>this.getOwnerComponent()?.getModel("i18n");
+    return <ResourceBundle>model.getResourceBundle();
   }
 
-  protected navigateTo(route: string) {
-    void this.getRouter().getTargets()?.display(route);
+  protected getBundleText(i18nKey: string, placeholders?: string[]) {
+    return this.getResourceBundle().getText(i18nKey, placeholders);
+  }
+
+  //REcheck
+  // protected navigate(url: string, newWindow?: boolean) {
+  //   URLHelper.redirect(url, newWindow);
+  // }
+
+  protected getAppID() {
+    return <string>this.getComponent().getManifestEntry("/sap.app/id");
+  }
+
+  protected async loadView<T extends Control>(viewName: string) {
+    const fragment = <Promise<T>>this.loadFragment({
+      name: `${this.getAppID()}.view.fragments.${viewName}`,
+    });
+
+    fragment
+      .then((control) => {
+        this.attachControl(control);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return fragment;
   }
 
   public attachControl(control: Control) {
@@ -91,6 +129,20 @@ export default class Base extends Controller {
     syncStyleClass(styleClass, view, control);
 
     view.addDependent(control);
+  }
+
+  protected getControlName<T extends Control>(control: T): string {
+    return control.getMetadata().getName();
+  }
+
+  protected isControl<T extends Control>(control: unknown, name: string): control is T {
+    return this.getControlName(<Control>control) === name;
+  }
+
+  protected displayTarget(options: { target: string; title?: string; description?: string }) {
+    const { target, title, description } = options;
+
+    void this.getRouter().getTargets()?.display(target);
   }
 
   protected getBindingTarget<T extends Dict>(source: Control) {
@@ -129,32 +181,109 @@ export default class Base extends Controller {
     return value;
   }
 
-  protected getControlsByFieldGroup<T extends Control>(props: {
-    container?: Control;
+  protected getBindingContextInfo<C extends Control, T extends Dict = Dict>(source: C) {
+    let bindingInfo = <CompositeBindingInfo>{
+      parts: [],
+    };
+
+    switch (true) {
+      case this.isControl<Input>(source, "sap.m.Input"):
+      case this.isControl<TextArea>(source, "sap.m.TextArea"): {
+        bindingInfo = source.getBindingInfo("value");
+
+        break;
+      }
+      case this.isControl<MultiInput>(source, "sap.m.MultiInput"): {
+        bindingInfo = source.getBindingInfo("tokens");
+
+        break;
+      }
+      case this.isControl<DatePicker>(source, "sap.m.DatePicker"):
+      case this.isControl<TimePicker>(source, "sap.m.TimePicker"): {
+        bindingInfo = source.getBindingInfo("value");
+
+        break;
+      }
+      case this.isControl<Select>(source, "sap.m.Select"):
+      case this.isControl<ComboBox>(source, "sap.m.ComboBox"): {
+        bindingInfo = source.getBindingInfo("selectedKey");
+
+        break;
+      }
+      case this.isControl<MultiComboBox>(source, "sap.m.MultiComboBox"): {
+        bindingInfo = source.getBindingInfo("selectedKeys");
+
+        break;
+      }
+    }
+
+    bindingInfo = bindingInfo || {
+      parts: [],
+    };
+
+    const binding = bindingInfo.binding;
+    const context = binding?.getContext();
+    const model = <JSONModel>context?.getModel();
+    const path = bindingInfo.parts?.[0]?.path || "";
+    const modelName = bindingInfo.parts?.[0]?.model || "";
+
+    const tooltipBinding = <PropertyBinding>source.getBinding("tooltip");
+
+    const value: BindingContextInfoTarget<C, T> = {
+      name: binding?.getPath() ?? path ?? "", // Property name (alt: getBindingPath)
+      path: context?.getPath() ?? "", // Value binding path
+      processor: context?.getModel(), // Binding model
+      bindingType: <SimpleType>binding?.getType?.(), // Input data type,
+      data: context?.getObject() as T, // Binding object value
+      binding,
+      model,
+      modelName,
+      label: <string>tooltipBinding?.getValue() || source.getTooltip_Text() || "",
+      control: source,
+      get target() {
+        const path = this.path;
+        const name = this.name;
+
+        return `${path}${path === "/" ? "" : "/"}${name}`;
+      },
+    };
+
+    return value;
+  }
+
+  /**
+   * Get all form controls (Input, Select, DatePicker, etc.)
+   * that belong to a specific FieldGroupId.
+   *
+   * - Searches inside the given container (or whole view if none).
+   * - Filters only valid form controls (based on given types).
+   * - Filters out invisible controls.
+   *
+   * @param props.groupId  One or more FieldGroupId values to match.
+   * @param props.container Optional control to search inside.
+   * @param props.types Optional allowed control types (defaults to all form controls).
+   */
+
+  protected getFormControlsByFieldGroup<T extends Control>(props: {
     groupId: string | string[];
-    visibility?: "all" | "visible";
-    types?: string[];
+    container?: Control;
+    types?: readonly FormControlType[];
   }) {
-    const { container, groupId, visibility = "visible", types } = props;
+    const { groupId, container, types = formControlTypes } = props;
 
-    return container?.getControlsByFieldGroupId(groupId).filter((control) => {
-      const hasGroup = control.checkFieldGroupIds(groupId);
+    // If no container specified then use the entire View
+    const _container = container ?? this.getView();
 
-      const isInput = control.isA<InputBase>(types || this.controlTypes);
+    if (!_container) return [];
 
-      const isVisible = visibility === "visible" ? control.getVisible() : true;
+    return _container.getControlsByFieldGroupId(groupId).filter((control) => {
+      // Check if control is one of the allowed types
+      const isFormControl = types.some((type) => this.isControl(control, type));
 
-      return hasGroup && isInput && isVisible;
+      const isVisible = control.getVisible();
+
+      return isFormControl && isVisible;
     }) as T[];
-  }
-
-  public getResourceBundle() {
-    const model = <ResourceModel>this.getOwnerComponent()?.getModel("i18n");
-    return <ResourceBundle>model.getResourceBundle();
-  }
-
-  protected getBundleText(i18nKey: string, placeholders?: string[]) {
-    return this.getResourceBundle().getText(i18nKey, placeholders);
   }
 
   protected getComponent() {
@@ -169,6 +298,10 @@ export default class Base extends Controller {
     this.getOwnerComponent()?.setModel(model, name);
   }
 
+  protected getMetadataLoaded() {
+    return this.getComponentModel().metadataLoaded();
+  }
+
   protected getErrorHandler() {
     return this.getComponent().getErrorHandler();
   }
@@ -181,10 +314,6 @@ export default class Base extends Controller {
     this.getMessageManager().addMessages(new Message(message));
   }
 
-  protected getMetadataLoaded() {
-    return this.getComponentModel().metadataLoaded();
-  }
-
   protected showBusyIndicator() {
     BusyIndicator.show();
   }
@@ -193,26 +322,54 @@ export default class Base extends Controller {
     BusyIndicator.hide();
   }
 
-  protected async loadView<T extends Control>(viewName: string) {
-    const fragment = <Promise<T>>this.loadFragment({
-      name: `sphinxjsc.com.ems.view.fragments.${viewName}`,
-    });
-
-    fragment
-      .then((control) => {
-        this.attachControl(control);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    return fragment;
-  }
-
   protected getServiceUrl(dataSource?: string) {
     const entry = `/sap.app/dataSources/${dataSource || "mainService"}/uri`;
     const serviceUrl = <string>(<Component>this.getOwnerComponent()).getManifestEntry(entry);
 
     return serviceUrl;
   }
+
+  protected validateInput(Input: InputBase, setState?: boolean) {
+    let inputValueState: ValueState = ValueState.None;
+    let Error = false;
+    const Binding = Input.getBinding("value");
+
+    if (Binding instanceof PropertyBinding) {
+      const Type = <SimpleType>Binding.getType();
+
+      if (Type) {
+        try {
+          const value = Input.getValue();
+          void Type.validateValue(value);
+        } catch (error) {
+          const { message } = <Error>error;
+
+          inputValueState = ValueState.Error;
+          Error = true;
+
+          if (Error) {
+            Input.setValueStateText(message);
+          }
+        }
+        if (setState) {
+          Input.setValueState(inputValueState);
+        }
+      }
+    }
+    return Error;
+  }
+
+  protected toggleButton(btnId: string, enabled: boolean) {
+    let button = this.getControlById<Button>(btnId);
+    button?.setEnabled(enabled);
+  }
+
+  protected getSAPDateValue = (id: string): string | null => {
+    const DatePicker = this.getControlById<DatePicker>(id);
+    let DateString: string | null = null;
+    if (DatePicker.getDateValue()) {
+      DateString = formatSAPDate(DatePicker.getDateValue());
+    }
+    return DateString;
+  };
 }

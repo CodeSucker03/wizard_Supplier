@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+
+specVersion: "3.1"
+metadata:
+  name: deploy1
+type: application
+builder:
+  customTasks:
+    - name: ui5-tooling-transpile-task
+      afterTask: replaceVersion
+      configuration:
+        debug: true
+        transformModulesToUI5:
+          overridesToOverride: true
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          url: http://118.70.33.126:8011
+          client: '100'
+       
+        app:
+          name: ZPG_UI5_NCCRE
+          description: NCC dang ky
+          package: ZPK_UI5_NCC
+          transport: SE6K900107
+        exclude:
+          - /test/
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**

@@ -4,6 +4,7 @@ import type ODataModel from "sap/ui/model/odata/v2/ODataModel";
 import type {
   ODataModel$BatchRequestFailedEvent,
   ODataModel$MetadataFailedEvent,
+  ODataModel$RequestFailedEvent,
 } from "sap/ui/model/odata/v2/ODataModel";
 import type Component from "../Component";
 
@@ -29,7 +30,7 @@ export class ErrorHandler {
     this.showServiceError(response);
   };
 
-  private requestFailedHandler = (event: ODataModel$BatchRequestFailedEvent & Model$RequestFailedEvent) => {
+  private requestFailedHandler = (event: ODataModel$BatchRequestFailedEvent & ODataModel$RequestFailedEvent) => {
     const response = event.getParameter("response");
     this.showServiceError(response);
   };

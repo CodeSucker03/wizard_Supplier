@@ -37,9 +37,11 @@ export interface ODataError {
   responseText?: string;
 }
 
-export interface ODataResponse<D = unknown> {
+export interface ODataResponses<D = unknown> {
   results: D;
 }
+
+export type ODataResponse<D = unknown> = D;
 
 // Batch response
 export interface ODataBatchResponseDetail<T> {

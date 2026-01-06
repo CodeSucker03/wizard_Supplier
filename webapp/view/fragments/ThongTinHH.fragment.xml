@@ -1,0 +1,132 @@
+<core:FragmentDefinition
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+>
+    <form:SimpleForm
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanL="12"
+        labelSpanM="12"
+        columnsL="1"
+        columnsM="1"
+        singleContainerFullSize="true"
+    />
+    <VBox>
+        <VBox class="customVBoxSpacing">
+            <Title text="HÀNG HÓA DỊCH VỤ CUNG CẤP" />
+            <VBox>
+                <Label
+                    text="Quy mô nhân sự"
+                    required="true"
+                />
+                <Input
+                    liveChange="validateQmns"
+                    id="quyMonhansu"
+                    required="true"
+                    type="Number"
+                    value="{
+                            path:'accModel>/Quymo',
+                            type:'sap.ui.model.type.String',
+                            constraints:{
+                            minLength:1,
+                            maxLength:15}}"
+                />
+            </VBox>
+            <VBox>
+                <table:Table
+                    id="tableHangHoa"
+                    rows="{hanghoa>/rows}"
+                    selectionMode="MultiToggle"
+                    enableSelectAll="false"
+                    rowSelectionChange="onScoreCardSelectChange"
+                    rowsUpdated="onScoreCardRowsUpdate"
+                    width="100%"
+                >
+                    <table:extension>
+                        <OverflowToolbar>
+                            <Label text="Thêm hàng hóa dịch vụ" />
+                            <Button
+                                id="btnAddNhomTC"
+                                icon="sap-icon://add"
+                                press="onDialog"
+                            />
+                            <Button
+                                icon="sap-icon://delete"
+                                press="deleteRows"
+                            />
+                        </OverflowToolbar>
+                    </table:extension>
+                    <table:columns>
+                        <table:Column>
+                            <Label
+                                text="Nhóm hàng hóa"
+                                required="true"
+                            />
+                            <table:template>
+                                <Text
+                                    text="{hanghoa>MatklLv1Txt}"
+                                    wrapping="true"
+                                />
+                            </table:template>
+                        </table:Column>
+
+                        <table:Column>
+                            <Label
+                                text="Loại hàng hóa"
+                                required="true"
+                            />
+                            <table:template>
+                                <Text
+                                    text="{hanghoa>MatklLv2Txt}"
+                                    wrapping="true"
+                                />
+                            </table:template>
+                        </table:Column>
+
+                        <table:Column>
+                            <Label
+                                text="Hàng hóa"
+                                required="true"
+                            />
+                            <table:template>
+                                <Text
+                                    text="{hanghoa>MatklTxt}"
+                                    wrapping="true"
+                                />
+                            </table:template>
+                        </table:Column>
+                    </table:columns>
+                </table:Table>
+            </VBox>
+        </VBox>
+        <VBox class="customVBoxSpacing">
+            <Title text="Phạm vi cung cấp" />
+            <MultiComboBox
+                width="500px"
+                id="test1"
+                selectionChange="onSelectionChange"
+            >
+                <core:Item
+                    key="1"
+                    text="Toàn quốc"
+                />
+                <core:Item
+                    key="2"
+                    text="Miền Bắc"
+                />
+
+                <core:Item
+                    key="3"
+                    text="Miền Trung"
+                />
+                <core:Item
+                    key="4"
+                    text="Miền Nam"
+                />
+            </MultiComboBox>
+        </VBox>
+    </VBox>
+</core:FragmentDefinition>

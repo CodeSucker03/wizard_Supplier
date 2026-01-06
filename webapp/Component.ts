@@ -8,6 +8,10 @@ import Device from "sap/ui/Device";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { ErrorHandler } from "./controller/ErrorHandler";
 import { createDeviceModel } from "./model/models";
+import type { ComponentData, Dict } from "./types/utils";
+import type FlexibleColumnLayout from "sap/f/FlexibleColumnLayout";
+import FlexibleColumnLayoutSemanticHelper from "sap/f/FlexibleColumnLayoutSemanticHelper";
+import { LayoutType } from "sap/f/library";
 
 /**
  * @namespace fioricert
@@ -31,6 +35,8 @@ export default class Component extends BaseComponent {
     // call the base component's init function
     super.init();
 
+    this.setModel(new JSONModel({}), "global");
+
     // messaging
     this.MessageManager = Messaging;
     this.MessageProcessor = new ControlMessageProcessor();
@@ -40,8 +46,6 @@ export default class Component extends BaseComponent {
 
     this.setModel(this.MessageManager.getMessageModel(), "message");
 
-    this.setModel(new JSONModel({}), "global");
-
     // set the device model
     this.setModel(createDeviceModel(), "device");
 
@@ -49,9 +53,11 @@ export default class Component extends BaseComponent {
     this.getRouter().initialize();
   }
 
+  // Initialize the application asynchronously
+  // It makes the application a lot faster and, through that, better to use.
   public override createContent(): Control | Promise<Control | null> | null {
     const appView = View.create({
-      viewName: "fioricert.view.App",
+      viewName: `${this.getAppID()}.view.App`,
       type: "XML",
       viewData: { component: this },
     });
@@ -67,8 +73,8 @@ export default class Component extends BaseComponent {
     return appView;
   }
 
-  public getErrorHandler() {
-    return this.ErrorHandler;
+  public getAppID() {
+    return <string>this.getManifestEntry("/sap.app/id");
   }
 
   public getMessageManager() {
@@ -79,7 +85,36 @@ export default class Component extends BaseComponent {
     return this.MessageProcessor;
   }
 
+  public getErrorHandler() {
+    return this.ErrorHandler;
+  }
+
   public getContentDensityClass(): string {
     return Device.support.touch ? "sapUiSizeCozy" : "sapUiSizeCompact";
+  }
+
+  public getStartupParameters() {
+    if (!this.getComponentData()) {
+      return {};
+    }
+
+    const parameters = (<ComponentData>this.getComponentData()).startupParameters;
+
+    const values = Object.keys(parameters).reduce<Dict>((acc, key) => {
+      acc[key] = parameters[key][0];
+      return acc;
+    }, {});
+
+    return values;
+  }
+
+  public getFCLHelper() {
+    const fcl = <FlexibleColumnLayout>(<View>this.getRootControl()).byId("fcl");
+
+    return FlexibleColumnLayoutSemanticHelper.getInstanceFor(fcl, {
+      defaultTwoColumnLayoutType: LayoutType.TwoColumnsMidExpanded,
+      defaultThreeColumnLayoutType: LayoutType.ThreeColumnsMidExpanded,
+      maxColumnsCount: 2,
+    });
   }
 }

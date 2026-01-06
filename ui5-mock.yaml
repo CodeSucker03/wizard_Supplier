@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
 
-specVersion: '3.1'
+specVersion: "3.1"
 metadata:
   name: fioricert
 type: application
@@ -18,10 +18,9 @@ server:
             - /test-resources
           url: https://ui5.sap.com
         backend:
-          - url: http://118.70.33.126:8006
+          - url: http://210.245.49.84:8011
             client: '100'
             path: /sap
-
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -41,6 +40,16 @@ server:
           overridesToOverride: true
         excludePatterns:
           - /Component-preload.js
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /sap/opu/odata/sap/ZODATA_EXNCC_DK_SRV
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations: []
 builder:
   customTasks:
     - name: ui5-tooling-modules-task

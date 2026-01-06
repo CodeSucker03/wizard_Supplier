@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZODATA_EXNCC_DK_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="EmailOTP" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Username"/>
+                </Key>
+                <Property Name="CompanyName" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="Company name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OTP" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Mã OTP" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="User" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Email" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Email của đầu mối" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="NCCMaterial" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Username"/>
+                    <PropertyRef Name="MatklLv1"/>
+                    <PropertyRef Name="MatklLv2"/>
+                    <PropertyRef Name="Matkl"/>
+                </Key>
+                <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="User" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv1" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv2" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Matkl" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Material Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv1Txt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv2Txt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklTxt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="MaterialLv1" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MatklLv1"/>
+                </Key>
+                <Property Name="MatklLv1" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv1Txt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="ToMaterialLv2" Relationship="ZODATA_EXNCC_DK_SRV.MaterialLv1ToMaterialLv2" FromRole="FromRole_MaterialLv1ToMaterialLv2" ToRole="ToRole_MaterialLv1ToMaterialLv2"/>
+            </EntityType>
+            <EntityType Name="MaterialLv2" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MatklLv1"/>
+                    <PropertyRef Name="MatklLv2"/>
+                </Key>
+                <Property Name="MatklLv1" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv2" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv2Txt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="ToMaterialGroup" Relationship="ZODATA_EXNCC_DK_SRV.MaterialLv2ToMaterialGroup" FromRole="FromRole_MaterialLv2ToMaterialGroup" ToRole="ToRole_MaterialLv2ToMaterialGroup"/>
+            </EntityType>
+            <EntityType Name="MaterialGroup" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MatklLv1"/>
+                    <PropertyRef Name="MatklLv2"/>
+                    <PropertyRef Name="Matkl"/>
+                </Key>
+                <Property Name="MatklLv1" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklLv2" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Level 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Matkl" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Material Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatklTxt" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Mat.Grp Desc. 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="NewNCC" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Username"/>
+                </Key>
+                <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="User" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CompanyName" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="Company name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Taxnumber" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Mã số thuế" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mancc" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Mã NCC" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CompanyAddress" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="Địa chỉ công ty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Thanhlap" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Ngày thành lập" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Website" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Website" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NddTitle" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Danh xưng đại diện" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NddHoten" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Họ tên đại diện" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NddChucvu" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Chức vụ đại diện" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NddIdnumber" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Số định danh" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NddNationality" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Quốc tịch đại diện" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DmTitle" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Danh xưng đầu mốI" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DmHoten" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Họ tên của đầu mối" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DmChucvu" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Chức vụ của đầu mối" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DmSdt" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Số điện thoại" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DmEmail" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Email của đầu mối" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Gioithieu" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Nguồn giới thiệu" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Quymo" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Quy mô nhân sự" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Phamvi1" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Toàn quốc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Phamvi2" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Miền Bắc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Phamvi3" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Miền Trung" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Phamvi4" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Miền Nam" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CharterCapital" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Vốn điều lệ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtYear1" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtYear2" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtYear3" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 3" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtAmount1" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtAmount2" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DtAmount3" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 3" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnYear1" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnYear2" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnYear3" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Năm 3" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnAmount1" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnAmount2" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LnAmount3" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unicode="false" sap:unit="Waers" sap:label="Giá trị 3" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Waers" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Currency" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Agree" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="NCC đồng ý" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="New Ncc Status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="MESSAGE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Otp" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Mã OTP" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="ToNCCMaterial" Relationship="ZODATA_EXNCC_DK_SRV.NewNCCToNCCMaterial" FromRole="FromRole_NewNCCToNCCMaterial" ToRole="ToRole_NewNCCToNCCMaterial"/>
+            </EntityType>
+            <Association Name="NewNCCToNCCMaterial" sap:content-version="1">
+                <End Type="ZODATA_EXNCC_DK_SRV.NewNCC" Multiplicity="1" Role="FromRole_NewNCCToNCCMaterial"/>
+                <End Type="ZODATA_EXNCC_DK_SRV.NCCMaterial" Multiplicity="*" Role="ToRole_NewNCCToNCCMaterial"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_NewNCCToNCCMaterial">
+                        <PropertyRef Name="Username"/>
+                    </Principal>
+                    <Dependent Role="ToRole_NewNCCToNCCMaterial">
+                        <PropertyRef Name="Username"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="MaterialLv2ToMaterialGroup" sap:content-version="1">
+                <End Type="ZODATA_EXNCC_DK_SRV.MaterialLv2" Multiplicity="1" Role="FromRole_MaterialLv2ToMaterialGroup"/>
+                <End Type="ZODATA_EXNCC_DK_SRV.MaterialGroup" Multiplicity="*" Role="ToRole_MaterialLv2ToMaterialGroup"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_MaterialLv2ToMaterialGroup">
+                        <PropertyRef Name="MatklLv2"/>
+                        <PropertyRef Name="MatklLv1"/>
+                    </Principal>
+                    <Dependent Role="ToRole_MaterialLv2ToMaterialGroup">
+                        <PropertyRef Name="MatklLv2"/>
+                        <PropertyRef Name="MatklLv1"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="MaterialLv1ToMaterialLv2" sap:content-version="1">
+                <End Type="ZODATA_EXNCC_DK_SRV.MaterialLv1" Multiplicity="1" Role="FromRole_MaterialLv1ToMaterialLv2"/>
+                <End Type="ZODATA_EXNCC_DK_SRV.MaterialLv2" Multiplicity="*" Role="ToRole_MaterialLv1ToMaterialLv2"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_MaterialLv1ToMaterialLv2">
+                        <PropertyRef Name="MatklLv1"/>
+                    </Principal>
+                    <Dependent Role="ToRole_MaterialLv1ToMaterialLv2">
+                        <PropertyRef Name="MatklLv1"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="ZODATA_EXNCC_DK_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="EmailOTPSet" EntityType="ZODATA_EXNCC_DK_SRV.EmailOTP" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="NCCMaterialSet" EntityType="ZODATA_EXNCC_DK_SRV.NCCMaterial" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="MaterialLv1Set" EntityType="ZODATA_EXNCC_DK_SRV.MaterialLv1" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="MaterialLv2Set" EntityType="ZODATA_EXNCC_DK_SRV.MaterialLv2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="MaterialGroupSet" EntityType="ZODATA_EXNCC_DK_SRV.MaterialGroup" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="NewNCCSet" EntityType="ZODATA_EXNCC_DK_SRV.NewNCC" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="MaterialLv1ToMaterialLv2Set" Association="ZODATA_EXNCC_DK_SRV.MaterialLv1ToMaterialLv2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="MaterialLv1Set" Role="FromRole_MaterialLv1ToMaterialLv2"/>
+                    <End EntitySet="MaterialLv2Set" Role="ToRole_MaterialLv1ToMaterialLv2"/>
+                </AssociationSet>
+                <AssociationSet Name="MaterialLv2ToMaterialGroupSet" Association="ZODATA_EXNCC_DK_SRV.MaterialLv2ToMaterialGroup" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="MaterialLv2Set" Role="FromRole_MaterialLv2ToMaterialGroup"/>
+                    <End EntitySet="MaterialGroupSet" Role="ToRole_MaterialLv2ToMaterialGroup"/>
+                </AssociationSet>
+                <AssociationSet Name="NewNCCToNCCMaterialSet" Association="ZODATA_EXNCC_DK_SRV.NewNCCToNCCMaterial" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="NewNCCSet" Role="FromRole_NewNCCToNCCMaterial"/>
+                    <End EntitySet="NCCMaterialSet" Role="ToRole_NewNCCToNCCMaterial"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <atom:link rel="self" href="/sap/opu/odata/sap/ZODATA_EXNCC_DK_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="/sap/opu/odata/sap/ZODATA_EXNCC_DK_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

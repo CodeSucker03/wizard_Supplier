@@ -3,16 +3,58 @@
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
 >
     <Page
         id="page"
-        title="{i18n>title}"
+        title="Đăng ký nhà cung cấp"
     >
-        <content>
-            <Button
-                text="Go to Editor"
-                press="onNavigate"
-            />
-        </content>
+        <Wizard
+            id="registerWizard"
+            complete="wizardCompeleteHandler"
+            finishButtonText="Đăng ký"
+        >
+            <WizardStep
+                id="termsConditions"
+                title="Điều Khoản"
+                validated="false"
+            >
+                <core:Fragment
+                    fragmentName="fioricert.view.fragments.DieuKhoan"
+                    type="XML"
+                />
+            </WizardStep>
+
+            <WizardStep
+                id="generaInfo"
+                title="Thông tin nhà cung cấp"
+                validated="false"
+            >
+                <core:Fragment
+                    fragmentName="fioricert.view.fragments.ThongTinNCC"
+                    type="XML"
+                />
+            </WizardStep>
+            <WizardStep
+                id="serviceInfo"
+                title="Thông tin hàng hóa"
+                validated="false"
+            >
+                <core:Fragment
+                    fragmentName="fioricert.view.fragments.ThongTinHH"
+                    type="XML"
+                />
+            </WizardStep>
+            <WizardStep
+                id="financeInfo"
+                title="Thông tin tài chính"
+                validated="false"
+            >
+                <core:Fragment
+                    fragmentName="fioricert.view.fragments.ThongTinTC"
+                    type="XML"
+                />
+            </WizardStep>
+        </Wizard>
     </Page>
 </mvc:View>

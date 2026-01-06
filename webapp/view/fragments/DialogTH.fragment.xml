@@ -1,0 +1,82 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+>
+    <Dialog
+        id="dlgCreateNTC"
+        title="Chọn nhóm hàng hóa"
+        contentWidth="600px"
+    >
+        <form:SimpleForm>
+            <VBox class="sapUiSmallMarginTop">
+                <layout:Grid
+                    defaultSpan=" L6 M6 S6"
+                    vSpacing="1"
+                >
+                    <layout:content>
+                        <Label
+                            text="Nhóm hàng hóa"
+                            required="true"
+                        />
+                        <ComboBox
+                            id="select1"
+                            items="{hanghoa>/LV1}"
+                            change="onSelectLV1"
+                        >
+                            <core:Item
+                                key="{hanghoa>MatklLv1}"
+                                text="{hanghoa>MatklLv1Txt}"
+                            />
+                        </ComboBox>
+
+                        <Label
+                            text="Loại hàng hóa"
+                            required="true"
+                        />
+                        <ComboBox
+                            id="select2"
+                            items="{hanghoa>/LV2}"
+                            change="onSelectLV2"
+                        >
+                            <core:Item
+                                key="{hanghoa>MatklLv2}"
+                                text="{hanghoa>MatklLv2Txt}"
+                            />
+                        </ComboBox>
+
+                        <Label
+                            text="Hàng hóa"
+                            required="true"
+                        />
+                        <ComboBox
+                            id="select3"
+                            items="{hanghoa>/LV3}"
+                        >
+                            <core:Item
+                                key="{hanghoa>Matkl}"
+                                text="{hanghoa>MatklTxt}"
+                            />
+                        </ComboBox>
+                    </layout:content>
+                </layout:Grid>
+            </VBox>
+        </form:SimpleForm>
+        <beginButton>
+            <Button
+                id="buttonCombobox"
+                text="Lưu"
+                press="onSaveNTC"
+                type="Emphasized"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                text="Đóng"
+                press="closeDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

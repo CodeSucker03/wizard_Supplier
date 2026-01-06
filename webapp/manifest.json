@@ -14,6 +14,17 @@
       "id": "@sap/generator-fiori:basic",
       "version": "1.15.3",
       "toolsId": "0fa9bf0d-fe43-4c99-9801-e41ea95c2b42"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZODATA_EXNCC_DK_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
     }
   },
   "sap.ui": {
@@ -52,6 +63,11 @@
         "settings": {
           "bundleName": "fioricert.i18n.i18n"
         }
+      },
+      "DKNCC": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
       }
     },
     "resources": {
@@ -81,12 +97,16 @@
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": ["TargetMain"]
+          "target": [
+            "TargetMain"
+          ]
         },
         {
           "name": "editor",
           "pattern": "editor",
-          "target": ["editor"]
+          "target": [
+            "editor"
+          ]
         }
       ],
       "targets": {

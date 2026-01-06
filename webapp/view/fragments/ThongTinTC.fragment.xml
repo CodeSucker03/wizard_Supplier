@@ -1,0 +1,330 @@
+<core:FragmentDefinition
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+>
+    <form:SimpleForm
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanL="12"
+        labelSpanM="12"
+        columnsL="1"
+        columnsM="1"
+        singleContainerFullSize="true"
+    >
+        <VBox>
+            <VBox class="customVBoxSpacing">
+                <Title text="THÔNG TIN TÀI CHÍNH" />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Vốn điều lệ"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="vondieule"
+                            liveChange="validateVdl"
+                            tooltip="Vốn điều lệ"
+                            value="{
+                                 path:'accModel>/CharterCapital',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="50%" />
+                </HBox>
+            </VBox>
+
+            <VBox class="customVBoxSpacing">
+                <Title text="Doanh thu 3 năm" />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam1"
+                            liveChange="validateNam1"
+                            value="{
+                                 path:'accModel>/DtYear1',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt1"
+                            liveChange="validateGiatri1"
+                            value="{
+                                 path:'accModel>/DtAmount1',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam2"
+                            liveChange="validateNam2"
+                            value="{
+                                 path:'accModel>/DtYear2',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt2"
+                            liveChange="validateGiatri2"
+                            value="{
+                                 path:'accModel>/DtAmount2',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam3"
+                            liveChange="validateNam2"
+                            value="{
+                                 path:'accModel>/DtYear3',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt3"
+                            liveChange="validateGiatri2"
+                            value="{
+                                 path:'accModel>/DtAmount3',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+            </VBox>
+            <VBox class="customVBoxSpacing">
+                <Title text="Lợi nhuận 3 năm" />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam4"
+                            liveChange="validateNam4"
+                            value="{
+                                 path:'accModel>/LnYear1',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt4"
+                            liveChange="validateGiatri1"
+                            value="{
+                                 path:'accModel>/LnAmount1',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam5"
+                            liveChange="validateNam5"
+                            value="{
+                                 path:'accModel>/LnYear2',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt5"
+                            liveChange="validateGiatri5"
+                            value="{
+                                 path:'accModel>/LnAmount2',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="năm"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="nam6"
+                            liveChange="validateNam6"
+                            value="{
+                                 path:'accModel>/LnYear3',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:4}}"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="giá trị"
+                            required="true"
+                        />
+                        <Input
+                            required="true"
+                            type="Number"
+                            id="gt6"
+                            liveChange="validateGiatri6"
+                            value="{
+                                 path:'accModel>/LnAmount3',
+                                 type:'sap.ui.model.type.String',
+                                 constraints:{
+                                 minLength:1,
+                                 maxLength:15}}"
+                        />
+                    </VBox>
+                    <VBox width="5%" />
+                </HBox>
+            </VBox>
+            <VBox class="customVBoxSpacing">
+                <VBox>
+                    <HBox>
+                        <VBox>
+                            <Input
+                                required="true"
+                                value="{accModel>/Otp}"
+                                id="otp"
+                            />
+                        </VBox>
+                        <VBox>
+                            <Button
+                                type="Emphasized"
+                                text="Lấy mã OTP"
+                                press="getOtp"
+                            />
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </form:SimpleForm>
+</core:FragmentDefinition>

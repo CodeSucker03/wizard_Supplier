@@ -36,7 +36,21 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        ignoreCertError: false
+        backend:
+          - url: http://118.70.33.126:8006
+            client: '100'
+            path: /sap
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /sap/opu/odata/sap/ZODATA_EXNCC_DK_SRV
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations: []
 builder:
   customTasks:
     - name: ui5-tooling-transpile-task

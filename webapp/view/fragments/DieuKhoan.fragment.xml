@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+>
+    <VBox>
+        <Text
+            text="{i18n>text1}"
+            class="sapUiTinyMarginBottom"
+        />
+        <Text
+            text="{i18n>text2}"
+            class="sapUiTinyMarginBottom"
+        />
+        <Text
+            text="{i18n>text3}"
+            class="sapUiMediumMarginBottom"
+        />
+        <Text
+            text="{i18n>text4}"
+            class="sapUiTinyMarginBottom"
+        />
+        <Text
+            text="{i18n>text5}"
+            class="sapUiTinyMarginBottom"
+        />
+        <Text
+            text="{i18n>text6}"
+            class="sapUiTinyMarginBottom"
+        />
+        <CheckBox
+            id="chkAgree"
+            text="Tôi đã đọc và đồng ý với điều khoản"
+            selected="{accModel>/Agree}"
+            select="onAcceptTerms"
+        />
+    </VBox>
+</core:FragmentDefinition>
