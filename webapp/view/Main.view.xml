@@ -6,55 +6,67 @@
     xmlns:core="sap.ui.core"
 >
     <Page
-        id="page"
+        id="wizardContentPage"
         title="Đăng ký nhà cung cấp"
     >
-        <Wizard
-            id="registerWizard"
-            complete="wizardCompeleteHandler"
-            finishButtonText="Đăng ký"
-        >
-            <WizardStep
-                id="termsConditions"
-                title="Điều Khoản"
-                validated="false"
+        <content>
+            <Wizard
+                id="registerWizard"
+                complete="wizardCompeleteHandler"
+                finishButtonText="Đăng ký"
             >
-                <core:Fragment
-                    fragmentName="fioricert.view.fragments.DieuKhoan"
-                    type="XML"
-                />
-            </WizardStep>
+                <WizardStep
+                    id="termsConditions"
+                    title="Điều Khoản"
+                    validated="false"
+                >
+                    <core:Fragment
+                        fragmentName="fioricert.view.fragments.DieuKhoan"
+                        type="XML"
+                    />
+                </WizardStep>
 
-            <WizardStep
-                id="generaInfo"
-                title="Thông tin nhà cung cấp"
-                validated="false"
-            >
-                <core:Fragment
-                    fragmentName="fioricert.view.fragments.ThongTinNCC"
-                    type="XML"
+                <WizardStep
+                    id="generaInfo"
+                    title="Thông tin nhà cung cấp"
+                    validated="false"
+                >
+                    <core:Fragment
+                        fragmentName="fioricert.view.fragments.ThongTinNCC"
+                        type="XML"
+                    />
+                </WizardStep>
+                <WizardStep
+                    id="serviceInfo"
+                    title="Thông tin hàng hóa"
+                    validated="false"
+                >
+                    <core:Fragment
+                        fragmentName="fioricert.view.fragments.ThongTinHH"
+                        type="XML"
+                    />
+                </WizardStep>
+                <WizardStep
+                    id="financeInfo"
+                    title="Thông tin tài chính"
+                    validated="false"
+                >
+                    <core:Fragment
+                        fragmentName="fioricert.view.fragments.ThongTinTC"
+                        type="XML"
+                    />
+                </WizardStep>
+            </Wizard>
+        </content>
+        <footer>
+            <OverflowToolbar>
+                <Button text="Editor" press="onNavigate"></Button>
+                <ToolbarSpacer />
+                <Button
+                    text="Cancel"
+                    press="handleWizardCancel"
                 />
-            </WizardStep>
-            <WizardStep
-                id="serviceInfo"
-                title="Thông tin hàng hóa"
-                validated="false"
-            >
-                <core:Fragment
-                    fragmentName="fioricert.view.fragments.ThongTinHH"
-                    type="XML"
-                />
-            </WizardStep>
-            <WizardStep
-                id="financeInfo"
-                title="Thông tin tài chính"
-                validated="false"
-            >
-                <core:Fragment
-                    fragmentName="fioricert.view.fragments.ThongTinTC"
-                    type="XML"
-                />
-            </WizardStep>
-        </Wizard>
+            </OverflowToolbar>
+        </footer>
     </Page>
 </mvc:View>

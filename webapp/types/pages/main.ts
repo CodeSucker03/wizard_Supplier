@@ -11,6 +11,9 @@ export interface EmployeeItem {
   Plans: string;
   Salary: number;
 }
+
+export type MessageBoxType = "confirm" | "alert" | "error" | "information" | "success" | "warning";
+
 export interface ToNCCMaterial {
   Username: string;
   MatklLv1: string;

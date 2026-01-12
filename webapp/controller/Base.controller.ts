@@ -18,18 +18,18 @@ import PropertyBinding from "sap/ui/model/PropertyBinding";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import type SimpleType from "sap/ui/model/SimpleType";
 import type Component from "../Component";
-import type { BindingContextInfoTarget, BindingTarget, CompositeBindingInfo } from "../types/control";
+import type { BindingContextInfoTarget, CompositeBindingInfo } from "../types/control";
 import type { Dict } from "../types/utils";
 import Formatter from "../utils/Formatter";
-import { ValueState } from "sap/ui/core/library";
+
 import type Button from "sap/m/Button";
 import DatePicker from "sap/m/DatePicker";
 import { formatSAPDate } from "fioricert/utils/shared";
 import TextArea from "sap/m/TextArea";
 import type TimePicker from "sap/m/TimePicker";
 import Select from "sap/m/Select";
-import type InputBase from "sap/m/InputBase";
-import { FieldEmail, FieldPhone } from "fioricert/utils/DataTypes";
+
+import { FieldCurrency, FieldEmail, FieldNationalID, FieldPhone, FieldQuantity, FieldVNTaxID } from "fioricert/utils/DataTypes";
 
 export const formControlTypes = [
   "sap.m.Input",
@@ -55,6 +55,10 @@ export default class Base extends Controller {
   public dataType = {
     FieldEmail,
     FieldPhone,
+    FieldVNTaxID,
+    FieldNationalID,
+    FieldQuantity,
+    FieldCurrency
   };
 
   protected getRouter() {
@@ -145,42 +149,10 @@ export default class Base extends Controller {
     void this.getRouter().getTargets()?.display(target);
   }
 
-  protected getBindingTarget<T extends Dict>(source: Control) {
-    let binding: PropertyBinding | null = null;
-
-    if (source.isA<Input | MultiInput>("sap.m.Input")) {
-      if (source.isA<MultiInput>("sap.m.MultiInput")) {
-        binding = <PropertyBinding>source.getBinding("tokens");
-      } else {
-        binding = <PropertyBinding>source.getBinding("value");
-      }
-    } else if (source.isA<ComboBox>(["sap.m.ComboBox", "sap.m.Select"])) {
-      binding = <PropertyBinding>source.getBinding("selectedKey");
-    } else if (source.isA<MultiComboBox>("sap.m.MultiComboBox")) {
-      binding = <PropertyBinding>source.getBinding("selectedKeys");
-    } else if (source.isA("sap.m.DatePicker")) {
-      binding = <PropertyBinding>source.getBinding("value");
-    }
-
-    const context = binding?.getContext();
-
-    const value: BindingTarget<T> = {
-      name: binding?.getPath() ?? "", // Property name
-      path: context?.getPath() ?? "", // Value binding path
-      processor: context?.getModel(), // Binding model
-      bindingType: <SimpleType>binding?.getType?.(), // Input data type
-      data: context?.getObject() as T, // Binding object value
-      binding,
-      get target() {
-        const path = this.path;
-        const name = this.name;
-        return `${path}${path === "/" ? "" : "/"}${name}`;
-      },
-    };
-
-    return value;
-  }
-
+  // In SAPUI5, absolute paths do not require a BindingContext to resolve.
+  // Therefore, binding.getContext() will return undefined.
+  // Because the context is undefined, context.getModel() also fails.
+  // Use Binding on the parent object to use relative binding to inputs ... 
   protected getBindingContextInfo<C extends Control, T extends Dict = Dict>(source: C) {
     let bindingInfo = <CompositeBindingInfo>{
       parts: [],
@@ -248,6 +220,7 @@ export default class Base extends Controller {
       },
     };
 
+    console.log(value, " for control", source);
     return value;
   }
 
@@ -329,35 +302,36 @@ export default class Base extends Controller {
     return serviceUrl;
   }
 
-  protected validateInput(Input: InputBase, setState?: boolean) {
-    let inputValueState: ValueState = ValueState.None;
-    let Error = false;
-    const Binding = Input.getBinding("value");
+  // protected validateInput(Input: InputBase, setState?: boolean) {
+  //   let inputValueState: ValueState = ValueState.None;
+  //   let Error = false;
+  //   let Errormessage = "";
+  //   const Binding = Input.getBinding("value");
 
-    if (Binding instanceof PropertyBinding) {
-      const Type = <SimpleType>Binding.getType();
+  //   if (Binding instanceof PropertyBinding) {
+  //     const Type = <SimpleType>Binding.getType();
 
-      if (Type) {
-        try {
-          const value = Input.getValue();
-          void Type.validateValue(value);
-        } catch (error) {
-          const { message } = <Error>error;
+  //     if (Type) {
+  //       try {
+  //         const value = Input.getValue();
+  //         void Type.validateValue(value);
+  //       } catch (error) {
+  //         const { message } = <Error>error;
+  //         Errormessage = message;
 
-          inputValueState = ValueState.Error;
-          Error = true;
-
-          if (Error) {
-            Input.setValueStateText(message);
-          }
-        }
-        if (setState) {
-          Input.setValueState(inputValueState);
-        }
-      }
-    }
-    return Error;
-  }
+  //         inputValueState = ValueState.Error;
+  //         Error = true;
+  //       }
+  //       if (setState) {
+  //         if (Error) {
+  //           Input.setValueStateText(Errormessage);
+  //         }
+  //         Input.setValueState(inputValueState);
+  //       }
+  //     }
+  //   }
+  //   return Error;
+  // }
 
   protected toggleButton(btnId: string, enabled: boolean) {
     let button = this.getControlById<Button>(btnId);

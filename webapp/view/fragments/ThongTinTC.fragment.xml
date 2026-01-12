@@ -13,7 +13,7 @@
         columnsM="1"
         singleContainerFullSize="true"
     >
-        <VBox>
+        <VBox binding="{accModel>/}">
             <VBox class="customVBoxSpacing">
                 <Title text="THÔNG TIN TÀI CHÍNH" />
                 <HBox
@@ -27,16 +27,13 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="vondieule"
                             liveChange="validateVdl"
                             tooltip="Vốn điều lệ"
                             value="{
-                                 path:'accModel>/CharterCapital',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>CharterCapital',
+                                 type:'.dataType.FieldCurrency'
+                                 }"
                         />
                     </VBox>
                     <VBox width="50%" />
@@ -54,17 +51,16 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam1"
-                            liveChange="validateNam1"
                             value="{
-                                 path:'accModel>/DtYear1',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>DtYear1',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -74,15 +70,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt1"
                             liveChange="validateGiatri1"
                             value="{
-                                 path:'accModel>/DtAmount1',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>DtAmount1',
+                                 type:'.dataType.FieldCurrency'
+                                 }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -97,17 +90,15 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam2"
-                            liveChange="validateNam2"
                             value="{
-                                 path:'accModel>/DtYear2',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>DtYear2',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -117,15 +108,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt2"
                             liveChange="validateGiatri2"
                             value="{
-                                 path:'accModel>/DtAmount2',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>DtAmount2',
+                                 type:'.dataType.FieldCurrency'
+                                 }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -140,17 +128,15 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam3"
-                            liveChange="validateNam2"
                             value="{
-                                 path:'accModel>/DtYear3',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>DtYear3',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -160,15 +146,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt3"
-                            liveChange="validateGiatri2"
+                            liveChange="validateGiatri3"
                             value="{
-                                 path:'accModel>/DtAmount3',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>DtAmount3',
+                                 type:'.dataType.FieldCurrency'
+                                }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -185,17 +168,15 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam4"
-                            liveChange="validateNam4"
                             value="{
-                                 path:'accModel>/LnYear1',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>LnYear1',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -205,15 +186,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt4"
                             liveChange="validateGiatri1"
                             value="{
-                                 path:'accModel>/LnAmount1',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>LnAmount1',
+                                 type:'.dataType.FieldCurrency'
+                                 }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -228,17 +206,15 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam5"
-                            liveChange="validateNam5"
                             value="{
-                                 path:'accModel>/LnYear2',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>LnYear2',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -248,15 +224,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt5"
                             liveChange="validateGiatri5"
                             value="{
-                                 path:'accModel>/LnAmount2',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>LnAmount2',
+                                 type:'.dataType.FieldCurrency'
+                                }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -271,17 +244,15 @@
                             text="năm"
                             required="true"
                         />
-                        <Input
+                        <DatePicker
                             required="true"
-                            type="Number"
                             id="nam6"
-                            liveChange="validateNam6"
                             value="{
-                                 path:'accModel>/LnYear3',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:4}}"
+                                    path:'accModel>LnYear3',
+                                    type:'sap.ui.model.type.Date',
+                                    formatOptions: 
+                                      {'pattern': 'yyyy'} 
+                                    }"
                         />
                     </VBox>
                     <VBox width="45%">
@@ -291,15 +262,12 @@
                         />
                         <Input
                             required="true"
-                            type="Number"
                             id="gt6"
                             liveChange="validateGiatri6"
                             value="{
-                                 path:'accModel>/LnAmount3',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:15}}"
+                                 path:'accModel>LnAmount3',
+                                 type:'.dataType.FieldCurrency'
+                                }"
                         />
                     </VBox>
                     <VBox width="5%" />
@@ -311,7 +279,7 @@
                         <VBox>
                             <Input
                                 required="true"
-                                value="{accModel>/Otp}"
+                                value="{accModel>Otp}"
                                 id="otp"
                             />
                         </VBox>

@@ -23,302 +23,290 @@
         columnsL="12"
         columnsM="12"
         singleContainerFullSize="true"
-    />
-    <VBox>
-        <VBox
-            width="100%"
-            class="sapUiSmallMarginBottom"
-        >
-            <Title text="CHỌN TÊN TÀI KHOẢN" />
-            <Label
-                text="Tên tài khoản"
-                required="true"
-            />
-            <HBox width="100%">
-                <VBox width="30%">
-                    <Input
-                        valueStateText="Phải nhập đúng định dạng"
-                        id="tenTaiKhoan"
-                        required="true"
-                        liveChange="validateTenTk"
-                        value="{
-                                 path:'accModel>/Username',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:3,
-                                 maxLength:255}}"
-                    />
-                </VBox>
-                <VBox
-                    width="70%"
-                    class="sapUiSmallMarginBegin"
+        binding="{accModel>/}"
+    >
+        <VBox>
+            <VBox
+                width="100%"
+                class="sapUiSmallMarginBottom"
+            >
+                <Title text="CHỌN TÊN TÀI KHOẢN" />
+                <Label
+                    text="Tên tài khoản"
+                    required="true"
                 />
-            </HBox>
-        </VBox>
-        <VBox class="sapUiSmallMarginBottom">
-            <Title text="THÔNG TIN NHÀ CUNG CẤP" />
-            <Label
-                text="Tên công ty"
-                required="true"
-            />
-            <Input
-                liveChange="validateTenCty"
-                id="tenCongty"
-                required="true"
-                value="{
-                        path:'accModel>/CompanyName',
-                        type:'sap.ui.model.type.String',
-                        constraints:{
-                        minLength:1,
-                        maxLength:255}}"
-            />
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="45%">
-                    <Label
-                        text="Mã số thuế"
-                        required="true"
-                    />
-                    <Input
-                        type="Text"
-                        required="true"
-                        liveChange="validateMst"
-                        id="masothue"
-                        value="{
-                                 path:'accModel>/Taxnumber',
+                <HBox width="100%">
+                    <VBox width="30%">
+                        <Input
+                            valueStateText="Phải nhập đúng định dạng"
+                            id="tenTaiKhoan"
+                            required="true"
+                            liveChange="validateTenTk"
+                            value="{
+                                 path:'accModel>Username',
                                  type:'sap.ui.model.type.String',
                                  constraints:{
-                                 minLength:10,
-                                 maxLength:15}}"
-                    />
-                </VBox>
-                <VBox width="45%">
-                    <Label
-                        text="Ngày thành lập"
-                        required="true"
-                    />
-                    <DatePicker
-                        id="ngayThanhLap"
-                        value="{accModel>/Thanhlap}"
-                        displayFormat="dd-MM-yyyy"
-                    />
-                </VBox>
-            </HBox>
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="45%">
-                    <Label
-                        text="Địa chỉ"
-                        required="true"
-                    />
-                    <Input
-                        liveChange="validateDiachi"
-                        required="true"
-                        id="diachi"
-                        value="{
-                                 path:'accModel>/CompanyAddress',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:255}}"
-                    />
-                </VBox>
-                <VBox width="45%">
-                    <Label text="Website" />
-                    <Input
-                        maxLength="1024"
-                        id="website"
-                        value="{accModel>/Website}"
-                    />
-                </VBox>
-            </HBox>
-        </VBox>
-        <!-- <VBox class="sapUiSmallMarginBottom">
-            <Title text="THÔNG TIN NGƯỜI ĐẠI DIỆN" />
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="45%">
-                    <Label
-                        text="Danh xưng"
-                        required="true"
-                    />
-                    <Select selectedKey="{path:'accModel>/NddTitle'}">
-                        <core:Item
-                            key="1"
-                            text="Ông"
+                                    minLength:3,
+                                    maxLength:255}}"
                         />
-                        <core:Item
-                            key="2"
-                            text="Bà"
+                    </VBox>
+                    <VBox
+                        width="70%"
+                        class="sapUiSmallMarginBegin"
+                    />
+                </HBox>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+                <Title text="THÔNG TIN NHÀ CUNG CẤP" />
+                <Label
+                    text="Tên công ty"
+                    required="true"
+                />
+                <Input
+                    liveChange="validateTenCty"
+                    id="tenCongty"
+                    required="true"
+                    value="{
+                        path:'accModel>CompanyName',
+                        type:'sap.ui.model.type.String'
+                        }"
+                />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Mã số thuế"
+                            required="true"
                         />
-                    </Select>
-                </VBox>
-                <VBox width="45%">
-                    <Label
-                        text="Họ và tên"
-                        required="true"
-                    />
-                    <Input
-                        liveChange="validateHoTen"
-                        required="true"
-                        id="hoten"
-                        value="{
-                                 path:'accModel>/NddHoten',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:255}}"
-                    />
-                </VBox>
-            </HBox>
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="45%">
-                    <Label
-                        text="Quốc tịch"
-                        required="true"
-                    />
-                    <Select selectedKey="{path:'accModel>/NddNationality'}">
-                        <core:Item
-                            key="Việt Nam"
-                            text="Việt Nam"
-                        />
-                        <core:Item
-                            key="Nước khác"
-                            text="Nước khác"
-                        />
-                    </Select>
-                </VBox>
-                <VBox width="45%">
-                    <Label
-                        text="Số định danh"
-                        required="true"
-                    />
-                    <Input
-                        required="true"
-                        liveChange="validateSdd"
-                        id="sodinhdanh"
-                        type="Number"
-                        value="{
-                                 path:'accModel>/NddIdnumber',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:12,
-                                 maxLength:12}}"
-                    />
-                </VBox>
-            </HBox>
-        </VBox> -->
-        <!-- <VBox class="sapUiSmallMarginBottom">
-            <Title text="THÔNG TIN LIÊN HỆ" />
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="30%">
-                    <Label
-                        text="Danh xưng"
-                        required="true"
-                    />
-                    <Select selectedKey="{path:'accModel>/DmTitle'}">
-                        <core:Item
-                            key="1"
-                            text="Ông"
-                        />
-                        <core:Item
-                            key="2"
-                            text="Bà"
-                        />
-                    </Select>
-                </VBox>
-                <VBox width="30%">
-                    <Label
-                        text="Họ và tên"
-                        required="true"
-                    />
-                    <Input
-                        required="true"
-                        liveChange="validateFullname"
-                        id="fullName"
-                        value="{
-                                 path:'accModel>/DmHoten',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:255}}"
-                    />
-                </VBox>
-                <VBox width="30%">
-                    <Label
-                        text="Chức vụ"
-                        required="true"
-                    />
-                    <Input
-                        required="true"
-                        liveChange="validateChucVu"
-                        id="chucvu"
-                        value="{
-                                 path:'accModel>/DmChucvu',
-                                 type:'sap.ui.model.type.String',
-                                 constraints:{
-                                 minLength:1,
-                                 maxLength:255}}"
-                    />
-                </VBox>
-            </HBox>
-            <HBox
-                width="100%"
-                justifyContent="SpaceBetween"
-            >
-                <VBox width="45%">
-                    <Label
-                        text="Số điện thoại"
-                        required="true"
-                    />
-                    <Input
-                        required="true"
-                        type="Number"
-                        liveChange="validateSdt"
-                        id="sdt"
-                        value="{
-                                 path:'accModel>/DmSdt',
-                                 type:'.dataType.FieldPhone',
-                                 constraints:{
-                                 minLength:10,
-                                 maxLength:10}}"
-                    />
-                </VBox>
-                <VBox width="45%">
-                    <Label
-                        text="Email"
-                        required="true"
-                    />
-                    <Input
-                        required="true"
-                        change="changeEmail"
-                        liveChange="validateEmail"
-                        id="email"
-                        value="{
-                                path:'accModel>/DmEmail',
-                                type: '.dataType.FieldEmail'                                
+                        <Input
+                            type="Text"
+                            liveChange="validateMst"
+                            required="true"
+                            id="masothue"
+                            value="{
+                                 path:'accModel>Taxnumber',
+                                 type:'.dataType.FieldVNTaxID'
                                 }"
-                    />
-                </VBox>
-            </HBox>
-            <Label text="Nguồn giới thiệu" />
-            <Input
-                liveChange="validateNguoiGt"
-                id="nguoiGioithieu"
-                value="{accModel>/Gioithieu}"
-            />
-        </VBox> -->
-    </VBox>
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="Ngày thành lập"
+                            required="true"
+                        />
+                        <DatePicker
+                            id="ngayThanhLap"
+                            required="true"
+                            value="{accModel>Thanhlap}"
+                            displayFormat="dd-MM-yyyy"
+                        />
+                    </VBox>
+                </HBox>
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Địa chỉ"
+                            required="true"
+                        />
+                        <Input
+                            liveChange="validateDiachi"
+                            id="diachi"
+                            required="true"
+                            value="{
+                                 path:'accModel>CompanyAddress',
+                                 type:'sap.ui.model.type.String'
+                                 }"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label text="Website" />
+                        <Input
+                            maxLength="1024"
+                            id="website"
+                            value="{accModel>Website}"
+                        />
+                    </VBox>
+                </HBox>
+            </VBox>
+            -->
+            <VBox class="sapUiSmallMarginBottom">
+                <Title text="THÔNG TIN NGƯỜI ĐẠI DIỆN" />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Danh xưng"
+                            required="true"
+                        />
+                        <Select selectedKey="{path:'accModel>NddTitle'}">
+                            <core:Item
+                                key="1"
+                                text="Ông"
+                            />
+                            <core:Item
+                                key="2"
+                                text="Bà"
+                            />
+                        </Select>
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="Họ và tên"
+                            required="true"
+                        />
+                        <Input
+                            liveChange="validateHoTen"
+                            id="hoten"
+                            required="true"
+                            value="{
+                                 path:'accModel>NddHoten',
+                                 type:'sap.ui.model.type.String'
+                                 }"
+                        />
+                    </VBox>
+                </HBox>
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Quốc tịch"
+                            required="true"
+                        />
+                        <Select selectedKey="{path:'accModel>NddNationality'}">
+                            <core:Item
+                                key="Việt Nam"
+                                text="Việt Nam"
+                            />
+                            <core:Item
+                                key="Nước khác"
+                                text="Nước khác"
+                            />
+                        </Select>
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="Số định danh"
+                            required="true"
+                        />
+                        <Input
+                            liveChange="validateSdd"
+                            id="sodinhdanh"
+                            type="Number"
+                            required="true"
+                            value="{
+                                 path:'accModel>NddIdnumber',
+                                 type:'.dataType.FieldNationalID'
+                                 }"
+                        />
+                    </VBox>
+                </HBox>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+                <Title text="THÔNG TIN LIÊN HỆ" />
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="30%">
+                        <Label
+                            text="Danh xưng"
+                            required="true"
+                        />
+                        <Select selectedKey="{path:'accModel>DmTitle'}">
+                            <core:Item
+                                key="1"
+                                text="Ông"
+                            />
+                            <core:Item
+                                key="2"
+                                text="Bà"
+                            />
+                        </Select>
+                    </VBox>
+                    <VBox width="30%">
+                        <Label
+                            text="Họ và tên"
+                            required="true"
+                        />
+                        <Input
+                            liveChange="validateFullname"
+                            id="fullName"
+                            required="true"
+                            value="{
+                                 path:'accModel>DmHoten',
+                                 type:'sap.ui.model.type.String'
+                                 }"
+                        />
+                    </VBox>
+                    <VBox width="30%">
+                        <Label
+                            text="Chức vụ"
+                            required="true"
+                        />
+                        <Input
+                            liveChange="validateChucVu"
+                            id="chucvu"
+                            required="true"
+                            value="{
+                                 path:'accModel>DmChucvu',
+                                 type:'sap.ui.model.type.String'
+                                 }"
+                        />
+                    </VBox>
+                </HBox>
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="45%">
+                        <Label
+                            text="Số điện thoại"
+                            required="true"
+                        />
+                        <Input
+                            type="Number"
+                            liveChange="validateSdt"
+                            id="sdt"
+                            required="true"
+                            value="{
+                                 path:'accModel>DmSdt',
+                                 type:'.dataType.FieldPhone'
+                                 }"
+                        />
+                    </VBox>
+                    <VBox width="45%">
+                        <Label
+                            text="Email"
+                            required="true"
+                        />
+                        <Input
+                            change="changeEmail"
+                            liveChange="validateEmail"
+                            id="email"
+                            required="true"
+                            value="{
+                                 path:'accModel>DmEmail',
+                                 type:'.dataType.FieldEmail'
+                                 }"
+                        />
+                    </VBox>
+                </HBox>
+                <Label text="Nguồn giới thiệu" />
+                <Input
+                    liveChange="validateNguoiGt"
+                    id="nguoiGioithieu"
+                    value="{accModel>Gioithieu}"
+                />
+            </VBox>
+        </VBox>
+    </form:SimpleForm>
 </core:FragmentDefinition>

@@ -1,16 +1,15 @@
 import DatePicker from "sap/m/DatePicker";
-import Base, { formControlTypes, type FormControlType } from "./Base.controller";
+import Base from "./Base.controller";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import type Wizard from "sap/m/Wizard";
 import WizardStep from "sap/m/WizardStep";
 import type Dialog from "sap/m/Dialog";
-import Input, { type Input$LiveChangeEvent } from "sap/m/Input";
+import Input from "sap/m/Input";
 import TextArea from "sap/m/TextArea";
 import ComboBox from "sap/m/ComboBox";
 import MessageBox from "sap/m/MessageBox";
 import type { Select$ChangeEvent } from "sap/m/Select";
 import type { Button$PressEvent } from "sap/m/Button";
-import type Button from "sap/m/Button";
 import type MultiComboBox from "sap/m/MultiComboBox";
 import InputBase, { type InputBase$ChangeEvent } from "sap/m/InputBase";
 import type Router from "sap/ui/core/routing/Router";
@@ -20,7 +19,10 @@ import type Control from "sap/ui/core/Control";
 import type TimePicker from "sap/m/TimePicker";
 import type { CheckBox$SelectEvent } from "sap/m/CheckBox";
 import type { ODataError, ODataErrorResponse, ODataResponses } from "fioricert/types/odata";
-import type { AccModelData, MaterialUnit, MatklLv1, MatklLv2 } from "fioricert/types/pages/main";
+import type { AccModelData, MaterialUnit, MatklLv1, MatklLv2, MessageBoxType } from "fioricert/types/pages/main";
+import type Page from "sap/m/Page";
+import type Message from "sap/ui/core/message/Message";
+import type Messaging from "sap/ui/core/Messaging";
 
 /**
  * @namespace fioricert.controller
@@ -33,27 +35,26 @@ interface ValidateResult {
 }
 export default class Main extends Base {
   private router: Router;
+
   private wizard: Wizard;
+  private WizardContentPage: Page;
   private steps: WizardStep[];
-  private StepValidates: boolean[] = [];
   private firstStep: WizardStep;
   private lastStep: WizardStep;
+
+  private StepValidates: boolean[] = [];
   private dialog: Dialog;
   private FieldValidates: { [key: string]: ValidateResult } = {}; // inputid is key
 
   // Messages
-  private MessageButton?: Button;
-  // private MessageManager: Messaging;
-  // private MessagePopover: MessagePopover;
-  // private toolbarSpacer?: ToolbarSpacer;
-  // private footerToolbar: OverflowToolbar;
+  private MessageManager: Messaging;
 
   public override onInit() {
-    let datePicker = this.getControlById<DatePicker>("ngayThanhLap");
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    datePicker.setMaxDate(today);
-    datePicker.attachChange(this.onDateChange.bind(this));
+    // let datePicker = this.getControlById<DatePicker>("ngayThanhLap");
+    // let today = new Date();
+    // today.setHours(0, 0, 0, 0);
+    // datePicker.setMaxDate(today);
+    // datePicker.attachChange(this.onDateChange.bind(this));
 
     // #region Model
     const accModelData: AccModelData = {
@@ -140,16 +141,33 @@ export default class Main extends Base {
     this.router = this.getRouter();
 
     // Messages
-    // this.MessageManager = this.getMessageManager();
+    this.MessageManager = this.getMessageManager();
+
+    // Wizard
+    this.WizardContentPage = this.getControlById("wizardContentPage");
 
     // Router
     this.router.getRoute("RouteMain")?.attachMatched(this.onObjectMatched);
   }
 
-
-  
   private onObjectMatched = (event: Route$MatchedEvent) => {
     this.getHH();
+
+    this.wizard = this.byId("registerWizard") as Wizard;
+    this.steps = this.wizard.getSteps();
+
+    // Find all datepicker controls in step 2
+    const allControls = <Control[]>this.steps[3].findAggregatedObjects(true);
+    allControls.forEach((control) => {
+      if(this.isControl(control, "sap.m.DatePicker")){
+        const today = new Date();
+        (<DatePicker>control).setMaxDate(today);
+
+      }
+    });
+
+    let datePicker = this.getControlById<DatePicker>("");
+    
 
     this.attachInputBaseChange();
   };
@@ -207,41 +225,41 @@ export default class Main extends Base {
       const allControls = <Control[]>step.findAggregatedObjects(true);
 
       if (allControls.length > 0) {
-        allControls.forEach((oInput) => {
-          if (oInput instanceof InputBase) {
-            const fieldId = oInput.getId();
+        allControls.forEach((Input) => {
+          if (Input instanceof InputBase) {
+            const fieldId = Input.getId();
 
-            const initValidated = !this.validateInput(oInput, false);
+            const initValidated = !this.validateControl(Input);
 
             this.FieldValidates[fieldId] = {
               isValid: initValidated,
               wizardStep: index,
-              input: oInput,
+              input: Input,
             };
 
             console.log("field", this.FieldValidates[fieldId]);
 
             // For specific cases attach change / live change
             switch (true) {
-              case this.isControl<Input>(oInput, "sap.m.Input"): {
-                oInput.attachLiveChange(this.onInputChange.bind(this));
+              case this.isControl<Input>(Input, "sap.m.Input"): {
+                Input.attachLiveChange(this.onInputChange.bind(this));
                 break;
               }
 
-              case this.isControl<TextArea>(oInput, "sap.m.TextArea"): {
-                oInput.attachLiveChange(this.onInputChange.bind(this));
+              case this.isControl<TextArea>(Input, "sap.m.TextArea"): {
+                Input.attachLiveChange(this.onInputChange.bind(this));
 
                 break;
               }
 
-              case this.isControl<DatePicker>(oInput, "sap.m.DatePicker"):
-              case this.isControl<TimePicker>(oInput, "sap.m.TimePicker"): {
-                oInput.attachChange(this.onInputChange.bind(this));
+              case this.isControl<DatePicker>(Input, "sap.m.DatePicker"):
+              case this.isControl<TimePicker>(Input, "sap.m.TimePicker"): {
+                Input.attachChange(this.onInputChange.bind(this));
                 break;
               }
 
-              case this.isControl<ComboBox>(oInput, "sap.m.ComboBox"): {
-                oInput.attachChange(this.onInputChange.bind(this));
+              case this.isControl<ComboBox>(Input, "sap.m.ComboBox"): {
+                Input.attachChange(this.onInputChange.bind(this));
                 break;
               }
               default:
@@ -254,27 +272,30 @@ export default class Main extends Base {
   }
 
   public onInputChange(oEvent: InputBase$ChangeEvent) {
-    const oInput = oEvent.getSource();
-    const sInputId = oInput.getId();
+    const Input = oEvent.getSource();
+    const InputId = Input.getId();
 
-    let bTotal = true;
+    let Total = true;
 
-    if (sInputId in this.FieldValidates) {
-      const currentStep = this.FieldValidates[sInputId].wizardStep;
+    if (InputId in this.FieldValidates) {
+      const currentStep = this.FieldValidates[InputId].wizardStep;
 
-      const bError = this.validateInput(oInput as Input, true); // redo this part
-      this.FieldValidates[sInputId].isValid = !bError;
+      const Error = this.validateControl(Input); // redo this part
+      this.FieldValidates[InputId].isValid = !Error;
 
       // Decide whether the current step is validated by checking whether all input valid
       Object.keys(this.FieldValidates).forEach((key) => {
         const fieldValidate = this.FieldValidates[key];
 
         if (fieldValidate.wizardStep === currentStep) {
-          console.log("fieldValidate", fieldValidate);
+          if (fieldValidate.isValid === false) {
+            console.log("fieldValidate", fieldValidate);
+          }
 
-          bTotal = bTotal && fieldValidate.isValid;
+          Total = Total && fieldValidate.isValid;
         }
       });
+      // check to validate the step 2 to included at least a row
       // if (currentStep === 2) {
       //   if (arrHH.length <= 0) {
       //     bTotal = false
@@ -282,46 +303,71 @@ export default class Main extends Base {
       //     bTotal = true;
       //   }
       // }
-      console.log(bTotal);
-      this.steps[currentStep].setValidated(bTotal);
-      this.StepValidates[currentStep] = bTotal;
+      this.steps[currentStep].setValidated(Total);
+      this.StepValidates[currentStep] = Total;
     }
-    bTotal = true;
+    Total = true;
 
-    this.StepValidates.forEach((bValid) => {
-      bTotal = bTotal && bValid;
+    this.StepValidates.forEach((valid) => {
+      Total = Total && valid;
     });
 
-    this.lastStep.setValidated(bTotal);
+    this.lastStep.setValidated(Total);
     console.log(this.StepValidates);
   }
- 
+
   public getOtp() {
-    const modelMetadata = this.getComponentModel("DKNCC");
-    const Username = this.getControlById<Input>("tenTaiKhoan").getValue();
-    const Email = this.getControlById<Input>("email").getValue();
-    const CompanyName = this.getControlById<Input>("tenCongty")
-      .getValue()
-      .replace(/[^\p{L}\p{N}\s]/gu, "")
-      .trim();
-    modelMetadata.setUseBatch(false);
-    const path = "/EmailOTPSet";
-    modelMetadata.create(
-      path,
-      {
-        Username: Username,
-        Email: Email,
-        CompanyName: CompanyName,
-      },
-      {
-        success: (odata: any) => {
-          MessageBox.success("Gửi OTP thành công");
-        },
-        error: (error: Error) => {
-          console.log(error);
-        },
+    try {
+      // Get form values
+      const username = this.getControlById<Input>("tenTaiKhoan").getValue()?.trim();
+      const email = this.getControlById<Input>("email").getValue()?.trim();
+      const companyName = this.getControlById<Input>("tenCongty")
+        .getValue()
+        ?.replace(/[^\p{L}\p{N}\s]/gu, "")
+        .trim();
+
+      // Validate required fields
+      if (!username) {
+        MessageBox.error("Vui lòng nhập tên tài khoản");
+        return;
       }
-    );
+
+      if (!email) {
+        MessageBox.error("Vui lòng nhập email");
+        return;
+      }
+
+      if (!companyName) {
+        MessageBox.error("Vui lòng nhập tên công ty");
+        return;
+      }
+
+      // Get model and configure
+      const modelMetadata = this.getComponentModel("DKNCC");
+      modelMetadata.setUseBatch(false);
+
+      // Create OTP request
+      const path = "/EmailOTPSet";
+      modelMetadata.create(
+        path,
+        {
+          Username: username,
+          Email: email,
+          CompanyName: companyName,
+        },
+        {
+          success: (odata: ODataResponses) => {
+            MessageBox.success("Gửi OTP thành công");
+          },
+          error: (error: Error) => {
+            console.log(error);
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Unexpected error in getOtp:", error);
+      MessageBox.error("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
+    }
   }
 
   public checkCombobox(): void {
@@ -419,8 +465,6 @@ export default class Main extends Base {
       MatklLv2Txt: value3,
     };
 
-    console.log(row);
-
     select1.setSelectedKey("");
     select2.setSelectedKey("");
     select3.setSelectedKey("");
@@ -441,13 +485,10 @@ export default class Main extends Base {
   }
 
   public onSumbit() {
-    console.log("test");
+    console.log("test submit");
     try {
-      const model = this.getModel("accModel");
-      const model1 = this.getModel("hanghoa");
-      const newAcc = <AccModelData>model.getData();
-
-      // newAcc.Agree = newAcc.Agree ? "Y" : "N";
+      const accModel = this.getModel("accModel");
+      const newAcc = <AccModelData>accModel.getData();
 
       newAcc.Username = newAcc.Username.replace(/[^a-zA-Z0-9]/g, "").trim();
       newAcc.Website = newAcc.Website.replace(/[^a-zA-Z0-9]/g, "").trim();
@@ -475,18 +516,20 @@ export default class Main extends Base {
         }
       });
 
-      const ToNCCMaterial = model1.getProperty("/rows");
-      newAcc.ToNCCMaterial = ToNCCMaterial;
+      const cargoModel = this.getModel("hanghoa");
+      const ToNCCMaterial = <MaterialUnit>cargoModel.getProperty("/rows");
 
-      model.setProperty("", newAcc);
-      model.getProperty("/rows");
+      // Lack of username ?
+      // newAcc.ToNCCMaterial = ToNCCMaterial;
+
+      cargoModel.setProperty("", newAcc);
 
       const modelMetadata = this.getComponentModel("DKNCC");
       modelMetadata.setUseBatch(false);
 
       modelMetadata.create("/NewNCCSet", newAcc, {
         success: (odata: any) => {
-          model.setProperty("/Agree", false);
+          cargoModel.setProperty("/Agree", false);
           this.toggleButton("chkAgree", false);
           MessageBox.success("Tạo tài khoản nhà cung cấp thành công");
         },
@@ -499,138 +542,16 @@ export default class Main extends Base {
     }
   }
 
+  public handleWizardCancel() {
+    this.handleMessageBoxOpen("Are you sure you want to cancel your report?", "warning");
+  }
+
+  private handleNavigationToStep(iStepNumber: number) {
+    this.wizard.goToStep(this.wizard.getSteps()[iStepNumber], false);
+  }
+
   // #region Valiate
 
-  public validateTenTk() {
-    const input = this.getControlById<Input>("tenTaiKhoan");
-    let value = input.getValue().trim();
-    const regex = /^[a-zA-Z0-9]{3,12}$/;
-    if (!regex.test(value)) {
-      value = value.replace(/[^a-zA-Z0-9]/g, "");
-      input.setValue(value);
-      this.getControlById<Input>("tenTaiKhoan").setValueState("Error");
-      this.getControlById<Input>("tenTaiKhoan").setValueStateText(
-        "Tên tài khoản có độ dài từ 3 đến 12 ký tự viết liền không dấu,không chưa khoảng trắng"
-      );
-    } else {
-      this.getControlById<Input>("tenTaiKhoan").setValueState("None");
-    }
-  }
-
-  public validateTenCty() {
-    this.validateRequiredInput("tenCongty");
-  }
-
-  // Given MST is string
-  public validateMst() {
-    const input = this.getControlById<Input>("masothue");
-    let value = input.getValue();
-
-    if (value.startsWith("-")) {
-      value = value.slice(1);
-    }
-
-    // (10–15 characters)
-    const isValidLength = value.length >= 10 && value.length <= 15;
-
-    if (!value || !isValidLength) {
-      // Invalid MST
-      input.setValueState("Error");
-      input.setValueStateText("Mã số thuế phải có từ 10 đến 15 ký tự");
-    } else {
-      // Valid MST
-      input.setValueState("None");
-      input.setValueStateText("");
-    }
-  }
-
-  public validateSdd() {
-    const input = this.getControlById<Input>("sodinhdanh");
-    let value = input.getValue();
-    if (value.startsWith("-")) {
-      value = value.slice(1);
-      input.setValue(value);
-    }
-
-    if (value.length !== 12) {
-      this.getControlById<Input>("sodinhdanh").setValueState("Error");
-      this.getControlById<Input>("sodinhdanh").setValueStateText("Phải nhập đúng 12 số");
-    } else {
-      this.getControlById<Input>("sodinhdanh").setValueState("None");
-    }
-  }
-
-  public validateDiachi() {
-    this.validateRequiredInput("diachi");
-  }
-
-  public validateHoTen() {
-    this.validateRequiredInput("hoten");
-  }
-
-  public validateFullname() {
-    this.validateRequiredInput("fullName");
-  }
-
-  public validateChucVu() {
-    this.validateRequiredInput("chucvu");
-  }
-
-  // For simple validation required/non-empty input
-  private validateRequiredInput(id: string) {
-    const input = this.getControlById<Input>(id);
-    const value = input.getValue().trim();
-
-    if (value.length < 1) {
-      input.setValueState("Error");
-      input.setValueStateText("Không được để trống hoặc chỉ nhập 1 ký tự");
-    } else {
-      input.setValueState("None");
-      input.setValueStateText("");
-    }
-  }
-
-  public validateSdt() {
-    const input = this.getControlById<Input>("sdt");
-    let value = input.getValue();
-    if (value.startsWith("-")) {
-      value = value.slice(1);
-      input.setValue(value);
-    }
-
-    // Keep digits only
-    value = value.replace(/\D/g, "");
-
-    // Write cleaned value back
-    input.setValue(value);
-
-    // Validate exactly 10 digits
-    if (value.length !== 10) {
-      input.setValueState("Error");
-      input.setValueStateText("Phải nhập đúng 10 số");
-    } else {
-      input.setValueState("None");
-      input.setValueStateText("");
-    }
-  }
-
-  public validateEmail() {
-    // const input = this.getControlById<Input>("email");
-    // // Simple but acceptable email pattern
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // input.setValue(value);
-    // if (!emailRegex.test(value)) {
-    //   input.setValueState("Error");
-    //   input.setValueStateText("Nhập đúng định dạng email");
-    // } else {
-    //   input.setValueState("None");
-    //   input.setValueStateText("");
-    // }
-  }
-
-  public validateNguoiGt() {
-    this.validateRequiredInput("nguoiGioithieu");
-  }
 
   private validateNumericInput(id: string) {
     // validate numeric input less than 15 digits
@@ -664,129 +585,33 @@ export default class Main extends Base {
     }
   }
 
-  public validateQmns() {
-    this.validateNumericInput("quyMonhansu");
+  // #region message
+
+  private handleMessageBoxOpen(Message: string, MessageBoxType: MessageBoxType) {
+    MessageBox[MessageBoxType](Message, {
+      actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+      onClose: (oAction: unknown) => {
+        if (oAction === MessageBox.Action.YES) {
+          this.handleNavigationToStep(0);
+          this.wizard.discardProgress(this.wizard.getSteps()[0], true);
+        }
+      },
+    });
   }
 
-  public validateVdl() {
-    this.validateNumericInput("validateVdl");
+  // Remove message from a control target path
+  private removeMessageFromTarget(target: string): void {
+    const messages = this.getMessages();
+
+    messages.forEach((message) => {
+      if (message.getTargets().includes(target)) {
+        this.MessageManager.removeMessages(message);
+      }
+    });
   }
 
-  private validateYear(id: string) {
-    const input = this.getControlById<Input>(id);
-    let value = input.getValue();
-
-    // Keep digits only
-    value = value.replace(/\D/g, "");
-
-    // Limit to 4 digits
-    if (value.length > 4) {
-      value = value.slice(0, 4);
-    }
-
-    // Update cleaned value back to input
-    input.setValue(value);
-
-    // Empty check
-    if (!value) {
-      input.setValueState("Error");
-      input.setValueStateText("Năm không được để trống và phải nhập đúng định dạng");
-      return;
-    }
-
-    // Must be exactly 4 digits
-    if (value.length !== 4) {
-      input.setValueState("Error");
-      input.setValueStateText("Năm phải gồm 4 chữ số");
-      return;
-    }
-
-    // Must start with 1 or 2
-    if (!/^[12]\d{3}$/.test(value)) {
-      input.setValueState("Error");
-      input.setValueStateText("Năm phải nằm trong khoảng 1000–2999");
-      return;
-    }
-
-    // Valid
-    input.setValueState("None");
-    input.setValueStateText("");
-  }
-
-  public validateNam1() {
-    this.validateYear("nam1");
-  }
-  public validateNam2() {
-    this.validateYear("nam2");
-  }
-
-  public validateNam3() {
-    this.validateYear("nam3");
-  }
-
-  public validateNam4() {
-    this.validateYear("nam4");
-  }
-
-  public validateNam5() {
-    this.validateYear("nam5");
-  }
-  public validateNam6() {
-    this.validateYear("nam6");
-  }
-
-  public validateGiatri1() {
-    this.validateSignedInteger("gt1");
-  }
-
-  public validateGiatri2() {
-    this.validateSignedInteger("gt2");
-  }
-
-  public validateGiatri3() {
-    this.validateSignedInteger("gt3");
-  }
-
-  public validateGiatri4() {
-    this.validateSignedInteger("gt4");
-  }
-
-  public validateGiatri5() {
-    this.validateSignedInteger("gt5");
-  }
-
-  public validateGiatri6() {
-    this.validateSignedInteger("gt6");
-  }
-
-  private validateSignedInteger(id: string) {
-    const input = this.getControlById<Input>(id);
-    let value = input.getValue();
-
-    // Keep optional leading minus, digits only
-    value = value.replace(/[^\d-]/g, "");
-
-    // Ensure minus is only at the start
-    if (value.includes("-")) {
-      value = (value.startsWith("-") ? "-" : "") + value.replace(/-/g, "");
-    }
-
-    // Limit total length to 15 characters
-    if (value.length > 15) {
-      value = value.slice(0, 15);
-    }
-
-    // Write cleaned value back
-    input.setValue(value);
-
-    // Validation
-    if (!value || value === "-") {
-      input.setValueState("Error");
-      input.setValueStateText("Phải nhập đúng định dạng");
-    } else {
-      input.setValueState("None");
-      input.setValueStateText("");
-    }
+  private getMessages() {
+    return <Message[]>this.MessageManager.getMessageModel().getData();
   }
 
   private validateControl(control: InputBase): boolean {
@@ -798,9 +623,10 @@ export default class Main extends Base {
       return isError;
     }
 
-    // this.removeMessageFromTarget(target);
+    this.removeMessageFromTarget(target);
 
     let requiredError = false;
+
     let outOfRangeError = false;
     let dateRangeError = false;
     let pastDateError = false;
@@ -836,7 +662,7 @@ export default class Main extends Base {
         } else if (value && !control.isValidValue()) {
           outOfRangeError = true;
         } else {
-          console.log("");
+          console.log("Date Eror");
         }
 
         break;
@@ -913,6 +739,8 @@ export default class Main extends Base {
           target,
           processor,
         });
+
+        isError = true;
       }
     }
 
@@ -925,229 +753,7 @@ export default class Main extends Base {
     this.onSumbit();
   }
 
-  // #region Message Pop
-
-  // private addMessageButton() {
-  //   const toolbar = this.footerToolbar;
-
-  //   if (!this.MessageButton) {
-  //     this.MessageButton = new Button({
-  //       id: "messageButton",
-  //       visible: "{= ${message>/}.length > 0 }",
-  //       icon: { path: "/", formatter: this.buttonIconFormatter },
-  //       type: { path: "/", formatter: this.buttonTypeFormatter },
-  //       text: { path: "/", formatter: this.highestSeverityMessages },
-  //       press: this.handleMessagePopoverPress,
-  //     });
-  //   }
-
-  //   console.log("Adding message button:", this.MessageButton);
-
-  //   toolbar.insertAggregation("content", this.MessageButton, 0);
-
-  //   this.createMessagePopover();
-  //   this.attachMessageChange();
-
-  //   if (!this.toolbarSpacer) {
-  //     this.toolbarSpacer = new ToolbarSpacer();
-  //     toolbar.insertAggregation("content", this.toolbarSpacer, 1);
-  //   }
-  // }
-
-  // // Toggle Button Message Popover
-  // public handleMessagePopoverPress = (event: Button$PressEvent) => {
-  //   if (!this.MessagePopover) {
-  //     this.createMessagePopover();
-  //   }
-
-  //   this.MessagePopover.toggle(event.getSource());
-  // };
-
-  // private createMessagePopover(): void {
-  //   this.MessagePopover = new MessagePopover({
-  //     activeTitlePress: (Event) => {
-  //       const item = Event.getParameter("item");
-  //       if (!item) return;
-
-  //       const msg = <Message>item.getBindingContext("message")?.getObject();
-  //       console.log(msg);
-  //       if (!msg) return;
-
-  //       const controlId = msg.getControlId();
-  //       const control = ElementRegistry.get(controlId);
-
-  //       if (control && control.isFocusable?.()) {
-  //         control.focus();
-  //       }
-  //     },
-  //     items: {
-  //       path: "message>/",
-  //       template: new MessageItem({
-  //         title: "{message>message}",
-  //         subtitle: "{message>additionalText}",
-  //         groupName: {
-  //           parts: [{ path: "message>controlIds" }],
-  //           formatter: this.getGroupName,
-  //         },
-  //         activeTitle: {
-  //           parts: [{ path: "message>controlIds" }],
-  //           formatter: this.isPositionable,
-  //         },
-  //         type: "{message>type}",
-  //         description: "{message>message}",
-  //       }),
-  //     },
-
-  //     groupItems: true,
-  //   });
-
-  //   this.MessageButton?.addDependent(this.MessagePopover);
-  // }
-
-  // private isPositionable = (ControlId: string) => {
-  //   // Such a hook can be used by the application to determine if a control can be found/reached on the page and navigated to.
-  //   return ControlId ? true : true;
-  // };
-
-  // private getGroupName = () => {
-  //   return "Create Leave Request";
-  // };
-
-  // private getMessages() {
-  //   return <Message[]>this.MessageManager.getMessageModel().getData();
-  // }
-
-  // // Remove message from a control target path
-  // private removeMessageFromTarget(target: string): void {
-  //   const messages = this.getMessages();
-
-  //   messages.forEach((message) => {
-  //     if (message.getTargets().includes(target)) {
-  //       this.MessageManager.removeMessages(message);
-  //     }
-  //   });
-  // }
-
-  // // // Display the button type according to the message with the highest severity | Error > Warning > Success > Info
-  // private buttonTypeFormatter = () => {
-  //   let HighestSeverity: ButtonType | undefined;
-
-  //   // Retrieve All Current Message
-  //   let Messages = <Message[]>this.MessageManager.getMessageModel().getData();
-
-  //   Messages.forEach((Message: Message) => {
-  //     switch (Message.getType()) {
-  //       case "Error":
-  //         HighestSeverity = ButtonType.Negative;
-  //         break;
-  //       case "Warning":
-  //         HighestSeverity = HighestSeverity !== ButtonType.Negative ? ButtonType.Critical : HighestSeverity;
-  //         break;
-  //       case "Success":
-  //         HighestSeverity =
-  //           HighestSeverity !== ButtonType.Negative && HighestSeverity !== ButtonType.Critical
-  //             ? ButtonType.Success
-  //             : HighestSeverity;
-  //         break;
-  //       default:
-  //         HighestSeverity = !HighestSeverity ? ButtonType.Neutral : HighestSeverity;
-  //         break;
-  //     }
-  //   });
-
-  //   return HighestSeverity;
-  // };
-
-  // // Display the number of messages with the highest severity
-  // private highestSeverityMessages = () => {
-  //   let HighestSeverityIconType = this.buttonTypeFormatter();
-
-  //   let HighestSeverityMessageType: MessageType | undefined;
-
-  //   switch (HighestSeverityIconType) {
-  //     case ButtonType.Negative:
-  //       HighestSeverityMessageType = MessageType.Error;
-  //       break;
-
-  //     case ButtonType.Critical:
-  //       HighestSeverityMessageType = MessageType.Warning;
-  //       break;
-
-  //     case ButtonType.Success:
-  //       HighestSeverityMessageType = MessageType.Success;
-  //       break;
-
-  //     default:
-  //       HighestSeverityMessageType = HighestSeverityMessageType ?? MessageType.None;
-  //       break;
-  //   }
-
-  //   // Retrieve All Current Message
-  //   const messages = this.getMessages();
-
-  //   // Get the Highest number of Error in an Error Type
-  //   const count = messages.reduce((total: number, msg: Message) => {
-  //     return msg.getType() === HighestSeverityMessageType ? total + 1 : total;
-  //   }, 0);
-
-  //   return count.toString() || "";
-  // };
-
-  // // Set the button icon according to the message with the highest severity
-  // private buttonIconFormatter = () => {
-  //   let sIcon: string = "";
-
-  //   // Retrieve All Current Message
-  //   let Messages: Message[] = <Message[]>this.MessageManager.getMessageModel().getData() || [];
-
-  //   Messages.forEach((Message) => {
-  //     switch (Message.getType()) {
-  //       case "Error":
-  //         sIcon = "sap-icon://error";
-  //         break;
-  //       case "Warning":
-  //         sIcon = sIcon !== "sap-icon://error" ? "sap-icon://alert" : sIcon;
-  //         break;
-  //       case "Success":
-  //         sIcon = sIcon !== "sap-icon://error" && sIcon !== "sap-icon://alert" ? "sap-icon://sys-enter-2" : sIcon;
-  //         break;
-  //       default:
-  //         sIcon = !sIcon ? "sap-icon://sys-enter-2" : sIcon;
-  //         break;
-  //     }
-  //   });
-
-  //   return sIcon;
-  // };
-
-  // private displayErrorMessage() {
-  //   if (this.MessageButton) {
-  //     if (this.MessageButton.getDomRef()) {
-  //       this.MessageButton.firePress();
-  //     } else {
-  //       this.MessageButton.addEventDelegate(this.onAfterRenderingMessageButton);
-  //     }
-  //   }
-  // }
-
-  // private onAfterRenderingMessageButton = {
-  //   onAfterRendering: () => {
-  //     if (this.MessageButton) {
-  //       this.MessageButton.firePress();
-  //       this.MessageButton.removeEventDelegate(this.onAfterRenderingMessageButton);
-  //     }
-  //   },
-  // };
-
-  // private attachMessageChange() {
-  //   this.MessagePopover.getBinding("items")?.attachChange(() => {
-  //     this.MessagePopover.navigateBack();
-
-  //     if (this.MessageButton) {
-  //       this.MessageButton.setType(this.buttonTypeFormatter());
-  //       this.MessageButton.setIcon(this.buttonIconFormatter());
-  //       this.MessageButton.setText(this.highestSeverityMessages());
-  //     }
-  //   });
-  // }
+  public onNavigate() {
+    this.getRouter().navTo("editor");
+  }
 }

@@ -17,7 +17,7 @@
     <VBox>
         <VBox class="customVBoxSpacing">
             <Title text="HÀNG HÓA DỊCH VỤ CUNG CẤP" />
-            <VBox>
+            <VBox binding="{accModel>/}">
                 <Label
                     text="Quy mô nhân sự"
                     required="true"
@@ -26,13 +26,10 @@
                     liveChange="validateQmns"
                     id="quyMonhansu"
                     required="true"
-                    type="Number"
                     value="{
-                            path:'accModel>/Quymo',
-                            type:'sap.ui.model.type.String',
-                            constraints:{
-                            minLength:1,
-                            maxLength:15}}"
+                        path:'accModel>Quymo',
+                        type:'.dataType.FieldQuantity'
+                        }"
                 />
             </VBox>
             <VBox>
